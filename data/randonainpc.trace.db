@@ -1,0 +1,3 @@
+2025-03-08 21:04:29.528888-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]CLASSE *"; expected "COMMIT, CREATE, CALL, CHECKPOINT, COMMENT"; SQL statement:
+CLASSE * [42001-232]
