@@ -2,8 +2,13 @@ package com.randonainpc.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.util.AbstractMap;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum Raca {
 
@@ -29,16 +34,16 @@ public enum Raca {
 
     private final String descricao; //Guarda o nome principal
     private final String[] erroDigitacao; //guarda os nomes com erro de digitação
-    private static final Map<String, Raca> LOOKUP = new HashMap<>(); //cria um mapa estatico de pesquisa
+    private static Map<String, Raca> LOOKUP = new HashMap<>(); //cria um mapa estatico de pesquisa
 
     //mapenado as variações de digitação disponiveis
     static {
-        for (Raca r : Raca.values()) {
-            LOOKUP.put(r.descricao.toLowerCase(), r);
-            for (String erro : r.erroDigitacao) {
-                LOOKUP.put(erro.toLowerCase(), r);
-            }
-        }
+        LOOKUP = Arrays.stream(Raca.values())
+                .flatMap(r -> Stream.concat(
+                        Stream.of(r.descricao),
+                        Arrays.stream(r.erroDigitacao)
+                ).map(alias -> new AbstractMap.SimpleEntry<>(alias.toLowerCase(), r)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (r1, r2) -> r1));
     }
 
     Raca(String descricao, String... erroDigitacao) {
@@ -54,7 +59,7 @@ public enum Raca {
     @JsonCreator
     public static Raca fromDescricao(String valor) {
         if(valor == null) {
-            throw new IllegalArgumentException("Classe não pode estar vazia");
+            throw new IllegalArgumentException("Raça não pode estar vazia");
         }
 
         Raca raca = LOOKUP.get(valor.toLowerCase());
@@ -62,7 +67,7 @@ public enum Raca {
             return raca;
         }
 
-        throw new IllegalArgumentException("Classe inválida: " + valor);
+        throw new IllegalArgumentException("Raça inválida: " + valor);
     }
 
 }
