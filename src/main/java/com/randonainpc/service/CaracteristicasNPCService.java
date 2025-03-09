@@ -26,7 +26,7 @@ public class CaracteristicasNPCService {
         return repository.findAll();
     }
 
-    //TODO: Fazer os métodos: Listar por ID, Alterar e Deletar;
+    //TODO: Fazer os métodos: Listar por ID, Alterar e Deletar; - Feito
 
     //Listar por ID
     public CaracteristicasNPC buscarPorId(Long id) {
@@ -35,9 +35,24 @@ public class CaracteristicasNPCService {
     }
 
     //Alterar
+    public CaracteristicasNPC atualizarNPC(Long id, CaracteristicasNPC caracteristicasNPC) {
+        CaracteristicasNPC caracteristicasExistente = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Personagem com o ID " + id + " não encontrado."));
+
+        // Atualiza apenas os que o usuário deseje modificar
+        caracteristicasExistente.setNome(caracteristicasNPC.getNome());
+        caracteristicasExistente.setClasse(caracteristicasNPC.getClasse());
+        caracteristicasExistente.setLevel(caracteristicasNPC.getLevel());
+        caracteristicasExistente.setRaca(caracteristicasNPC.getRaca());
+
+        return repository.save(caracteristicasExistente);
+    }
+
 
     //Deletar
-
+    public void deletarPorId(Long id) {
+        repository.deleteById(id);
+    }
 
 
 }
