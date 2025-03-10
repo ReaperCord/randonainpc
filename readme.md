@@ -1,7 +1,3 @@
-Aqui está um exemplo de README para o seu projeto "Randon Plot Hook for Dungeon Masters":
-
----
-
 # Randon Plot Hook for Dungeon Masters
 
 Este projeto é uma API em **Spring Boot** para mestres de RPG criarem aventuras personalizadas para suas sessões de jogo, com base nas características dos jogadores (NPCs). A ideia é permitir que os mestres insiram dados básicos sobre seus jogadores e usem essas informações para gerar prompts de inteligência artificial que ajudem a criar aventuras desafiadoras e interessantes para suas campanhas.
