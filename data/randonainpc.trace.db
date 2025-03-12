@@ -1,3 +1,12 @@
 2025-03-08 21:04:29.528888-03:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "[*]CLASSE *"; expected "COMMIT, CREATE, CALL, CHECKPOINT, COMMENT"; SQL statement:
 CLASSE * [42001-232]
+2025-03-12 05:13:13.966990-03:00 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CARACTERISTICAS_NPC" already exists; SQL statement:
+CREATE TABLE caracteristicas_npc (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY ,
+    nome VARCHAR(255) NOT NULL,
+    classe VARCHAR(255) NOT NULL,
+    level INT NOT NULL,
+    raca VARCHAR(255) NOT NULL
+) [42101-232]
