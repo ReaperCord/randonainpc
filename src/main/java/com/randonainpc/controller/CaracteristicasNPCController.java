@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@AventuraController
 @RequestMapping("/caracteristicas")
 public class CaracteristicasNPCController {
 
