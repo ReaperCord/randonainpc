@@ -13,7 +13,7 @@ import java.util.Map;
 public class ChatGptService {
 
     private final WebClient webClient;
-    private String apiKey = System.getenv("API_KEY");
+    private String apiKey = System.getenv("CHATGPT_API_KEY");
 
     public ChatGptService(WebClient webClient) {
         this.webClient = webClient;
@@ -24,31 +24,29 @@ public class ChatGptService {
                 "\n" +
                 "A história deve girar em torno de um vilão sombrio, que está tentando completar um ritual para retornar ao mundo material ou alcançar algum outro objetivo maligno. O grupo de jogadores deve deter sua ascensão, enfrentando forças malignas, armadilhas e enigmas ao longo da jornada.\n" +
                 "\n" +
-                "A aventura deve incluir subquests interligadas que ajudem no desenvolvimento da história, com uma recompensa mágica importante que ajudará na batalha final, mas sem ser desbalanceada. Os inimigos e desafios devem ser ajustados de acordo com o número e o nível dos personagens.";
+                "A aventura deve incluir subquests interligadas que ajudem no desenvolvimento da história, com uma recompensa mágica importante que ajudará na batalha final, mas sem ser desbalanceada. Os inimigos e desafios devem ser ajustados 4 personagens level 3.";
 
         Map<String, Object> requestBody = Map.of(
-                "model", "gpt-4o-mini",
-                "message", List.of(
-                        Map.of("role", "system",
-                                "content", "Você é um assistente de um mestre de DnD 5e"),
-                        Map.of("role","user",
-                                "content", prompt)
+                "model", "gpt-3.5-turbo",
+                "messages", List.of(
+                        Map.of("role", "system", "content", "Você é um assistente para um mestre de DnD 5e."),
+                        Map.of("role", "user", "content", prompt)
                 )
         );
 
         return webClient.post()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer" + apiKey)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey)
                 .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(response -> {
                     var choices = (List<Map<String, Object>>) response.get("choices");
                     if (choices != null && !choices.isEmpty()) {
-                        Map<String, Object> message = (Map<String, Object>) choices.get(0);
+                        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
                         return message.get("content").toString();
                     }
-                    return "Não foi possivel gerar uma aventura";
+                    return "Nenhuma receita foi gerada.";
                 });
     }
 }
