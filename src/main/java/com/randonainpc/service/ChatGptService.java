@@ -1,5 +1,6 @@
 package com.randonainpc.service;
 
+import com.randonainpc.model.CaracteristicasNPC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ChatGptService {
@@ -19,12 +21,18 @@ public class ChatGptService {
         this.webClient = webClient;
     }
 
-    public Mono<String> gerarAventura() {
-        String prompt = "Agora você é um mestre de RPG e deve criar uma aventura de introdução com os personagens enviados. Crie uma aventura de D&D 5e para um grupo de jogadores com níveis variáveis. A narrativa deve ser estruturada em três arcos principais: o Chamado do Herói, Desafio/Dúvidas e Batalha Final. A aventura deve incluir NPCs interativos com falas chave, inimigos desafiadores com quantidade detalhada de inimigos por combate, e uma narrativa coesa com desenvolvimento, apogeu e resolução.\n" +
+    public Mono<String> gerarAventura(List<CaracteristicasNPC> caracteristicasNPCS) {
+
+        String jogadores = caracteristicasNPCS.stream()
+                .map(pc -> String.format("Nome: %s, Nível: %s",
+                        pc.getNome(), pc.getLevel()))
+                .collect(Collectors.joining("\n"));
+
+        String prompt = "Agora você é um mestre de RPG e deve criar uma aventura de introdução com os personagens enviados. Baseado no banco de dados crie uma aventura de D&D 5e para este grupo de jogadores e insira os nomes deles para criar um hook inicial mais impactante. A narrativa deve ser estruturada em três arcos principais: o Chamado do Herói, Desafio/Dúvidas e Batalha Final. A aventura deve incluir NPCs interativos com falas chave, inimigos desafiadores com quantidade detalhada de inimigos por combate, e uma narrativa coesa com desenvolvimento, apogeu e resolução.\n" +
                 "\n" +
                 "A história deve girar em torno de um vilão sombrio, que está tentando completar um ritual para retornar ao mundo material ou alcançar algum outro objetivo maligno. O grupo de jogadores deve deter sua ascensão, enfrentando forças malignas, armadilhas e enigmas ao longo da jornada.\n" +
                 "\n" +
-                "A aventura deve incluir subquests interligadas que ajudem no desenvolvimento da história, com uma recompensa mágica importante que ajudará na batalha final, mas sem ser desbalanceada. Os inimigos e desafios devem ser ajustados 4 personagens level 3.";
+                "A aventura deve incluir subquests interligadas que ajudem no desenvolvimento da história, com uma recompensa mágica importante que ajudará na batalha final, mas sem ser desbalanceada. Os inimigos e desafios devem ser ajustados para o nível médio de todos os jogadores inseridos no bando de dados";
 
         Map<String, Object> requestBody = Map.of(
                 "model", "gpt-3.5-turbo",
